@@ -27,14 +27,14 @@
 
 <script>
     function handleTweetFormError(msg, display) {
-            let myErrorDiv = document.getElementById("tweet-create-form-error")
-            if (display === true) {
-                myErrorDiv.setAttribute("class", "d-block alert alert-danger")
-                myErrorDiv.innerHTML = msg
-            } else {
-                myErrorDiv.setAttribute("class", "d-none alert alert-danger")
-            }
+        let myErrorDiv = document.getElementById("tweet-create-form-error")
+        if (display === true) {
+            myErrorDiv.setAttribute("class", "d-block alert alert-danger")
+            myErrorDiv.innerHTML = msg
+        } else {
+            myErrorDiv.setAttribute("class", "d-none alert alert-danger")
         }
+    }
 
     function handleTweetCreateFormDidSubmit(event) {
         event.preventDefault()
@@ -60,20 +60,31 @@
                 myForm.reset()
             } else if (xhr.status === 400) {
                 const errorJson = xhr.response
-                
+
                 const contentError = errorJson.content
                 let contentErrorMsg;
                 if (contentError) {
                     contentErrorMsg = contentError[0]
                     if (contentErrorMsg) {
                         handleTweetFormError(contentErrorMsg, true)
+                    } else {
+                        alert("an error ocured. Please try again.")
                     }
+                } else {
+                    alert("an error ocured. Please try again.")
                 }
-            }
 
-            console.log(contentErrorMsg)
-
+            } else if (xhr.status === 401) {
+                alert("You must login!")
+                window.location.href = "/login"
+            } else if (xhr.status === 500)
+                alert("an error ocured. Please try again.")
         }
+
+
+
+
+
         xhr.onerror = function () {
             alert("an error ocurred. Please try again later")
         }

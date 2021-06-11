@@ -1,10 +1,11 @@
 import random
+from django.conf import settings
 from django.db import models
-from django.db.models.base import Model
-from django.db.models.fields.files import ImageField
-import random
+
+User = settings.AUTH_USER_MODEL
 
 class Tweet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 

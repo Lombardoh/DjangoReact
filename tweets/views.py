@@ -1,11 +1,12 @@
+import json
 from tweetme2.settings import ALLOWED_HOSTS
-from django import http
+
 from django.conf import settings
-from django.http.response import Http404, JsonResponse
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
-from django.http import HttpResponse, Http404, JsonResponse
-import random
+
+
 
 
 
@@ -19,11 +20,17 @@ def home_view(request, *args, **kargs):
     return render(request, "pages/home.html", {})
 
 def tweet_create_view(request, *args, **kargs):
-    print("ajax", request.is_ajax())
+    user = request.user
+    if not request.user.is_authenticated:
+        if request.is_ajax():
+            user = None
+            return JsonResponse({}, status = 401)
+        return redirect(settings.LOGIN_URL)
     form = TweetForm(request.POST or None)
     next_url = request.POST.get("next")
     if form.is_valid():
         obj = form.save(commit=False)
+        obj.user = user
         obj.save()
         if request.is_ajax():
             return JsonResponse(obj.serialize(), status = 201)
