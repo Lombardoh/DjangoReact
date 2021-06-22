@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {loadTweets} from '../lookup'
+import {createTweet, loadTweets} from '../lookup'
 
 export function TweetsComponent(props){
     const textAreaRef = React.createRef()
@@ -8,11 +8,15 @@ export function TweetsComponent(props){
       event.preventDefault()
       const newVal = textAreaRef.current.value
       let tempNewTweets = [...newTweets]
-      tempNewTweets.unshift({
-        content: newVal,
-        likes: 0,
-        id: 12312
+      createTweet(newVal, (response, status)=>{
+        if(status===201){
+          tempNewTweets.unshift(response)
+        } else {
+          console.log(response)
+          alert("An error occured please try again1")
+        }
       })
+      
       setNewTweets(tempNewTweets)
       textAreaRef.current.value = ''
     }
@@ -44,6 +48,7 @@ export function TweetList(props){
       if(tweetsDidSet===false){
         const myCallback = (response, status) => {
           if (status === 200) {
+            
             setTweetsInit(response)
             setTweetsDidSet(true)
           } else {
@@ -52,7 +57,7 @@ export function TweetList(props){
         }
         loadTweets(myCallback)
       }
-    }, [tweetsInit, TweetsDidSet, setTweetsDidSet])
+    }, [tweetsInit, tweetsDidSet, setTweetsDidSet])
     return tweets.map((item, index) => {
         return <Tweet tweet={item} className="my-5 py-5 border bg-white text-dark" key={index} />
     })
