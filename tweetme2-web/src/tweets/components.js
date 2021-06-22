@@ -9,11 +9,12 @@ export function TweetsComponent(props){
       const newVal = textAreaRef.current.value
       let tempNewTweets = [...newTweets]
       createTweet(newVal, (response, status)=>{
+        console.log(response)
         if(status===201){
           tempNewTweets.unshift(response)
         } else {
           console.log(response)
-          alert("An error occured please try again1")
+          alert("An error occured please try again")
         }
       })
       
