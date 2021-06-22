@@ -20,7 +20,9 @@
     </div>
 </div>
 
-<div class="row" id="tweets">
+<div id="tweetme-2"></div>
+
+<div class="row d-none" id="tweets">
     Replace me
 </div>
 
@@ -100,11 +102,6 @@
             } else if (xhr.status === 500)
                 alert("an error ocured. Please try again.")
         }
-
-
-
-
-
         xhr.onerror = function () {
             alert("an error ocurred. Please try again later")
         }
@@ -153,9 +150,9 @@
         const data = JSON.stringify({
             id: tweet_id,
             action: action
+            
         })
         const xhr = new XMLHttpRequest()
-
         const csrftoken = getCookie('csrftoken');
         xhr.open(method, url)
         xhr.setRequestHeader("Content-Type", "application/json")
@@ -164,6 +161,7 @@
         xhr.setRequestHeader("X-CSRFToken", csrftoken)
         xhr.onload = function () {
             loadTweets(tweetsContainerElement)
+            console.log(xhr.response)
         }
         xhr.send(data)
         return
